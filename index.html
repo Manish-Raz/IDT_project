@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlow - Self-Improvement Accountability Platform</title>
+    <style>
+        /* ============================================
+           GLOBAL STYLES & RESET
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --dark-bg: #1e293b;
+            --darker-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .toast.success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-color);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ============================================
+           LANDING PAGE
+           ============================================ */
+        #landing-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .landing-content {
+            max-width: 800px;
+            padding: 40px 20px;
+        }
+
+        .landing-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .landing-content p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .landing-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-8px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           AUTH SECTIONS (LOGIN & SIGNUP)
+           ============================================ */
+        #login-section, #signup-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           DASHBOARD
+           ============================================ */
+        #dashboard-section {
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-welcome h1 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .main-content, .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* ============================================
+           TASK SECTION
+           ============================================ */
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .task-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .task-status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 20px 0;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .image-preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        /* ============================================
+           CHALLENGES SECTION
+           ============================================ */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .challenge-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .challenge-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .challenge-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: var(--light-bg);
+            border-radius: 8px;
+        }
+
+        .challenge-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        /* ============================================
+           GROUP SECTION
+           ============================================ */
+        .group-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .member-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .member-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .member-points {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .pending-approvals {
+            margin-top: 30px;
+        }
+
+        .approval-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .approval-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .approval-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* ============================================
+           PROFILE SECTION
+           ============================================ */
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+            border: 4px solid white;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .achievement-badge {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .achievement-badge:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .achievement-badge.locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 968px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+
+            .landing-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .landing-content p {
+                font-size: 1.1rem;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .challenges-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .landing-content h1 {
+                font-size: 2rem;
+            }
+
+            .auth-container {
+                padding: 30px 20px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .landing-buttons {
+                flex-direction: column;
+            }
+
+            .dashboard-nav {
+                width: 100%;
+            }
+
+            .dashboard-nav .btn {
+                flex: 1;
+            }
+        }
+
+        /* ============================================
+           LOADING SPINNER
+           ============================================ */
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ============================================
+           MODAL
+           ============================================ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ============================================
+         LANDING SECTION
+         ============================================ -->
+    <section id="landing-section">
+        <div class="container">
+            <div class="landing-content">
+                <h1>🎯 YourWork</h1>
+                <p>Transform your goals into reality through accountability and community support. Stay consistent, build habits, and achieve more together.</p>
+                
+                <div class="landing-buttons">
+                    <button class="btn btn-primary" onclick="showSection('login-section')">Get Started</button>
+                    <button class="btn btn-outline" onclick="showSection('signup-section')">Create Account</button>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">💪</div>
+                        <h3>Build Habits</h3>
+                        <p>Create daily challenges and stay consistent with your goals</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Social Accountability</h3>
+                        <p>Join groups with friends and keep each other motivated</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💎</div>
+                        <h3>Point System</h3>
+                        <p>Earn points for consistency, lose points for missing tasks</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Track Progress</h3>
+                        <p>Visualize your journey and celebrate milestones</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         LOGIN SECTION
+         ============================================ -->
+    <section id="login-section" class="hidden">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Welcome Back!</h2>
+                <p>Login to continue your journey</p>
+            </div>
+            
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="user@test.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="#" onclick="showSection('signup-section')">Sign up</a></p>
+                <p style="margin-top: 15px;"><a href="#" onclick="showSection('landing-section')">← Back to Home</a></p>
+            </div>
+
+            <div style="margin-top: 30px; padding: 15px; background: var(--light-bg); border-radius: 8px;">
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;"><strong>Demo Credentials:</strong></p>
+                <p style="font-size: 14px;">Email: user@test.com</p>
+                <p style="font-size: 14px;">Password: 123456</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SIGNUP SECTION
+         ============================================ -->
+    <section id="signup-section" class="hidden">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Join thousands improving themselves daily</p>
+            </div>
+            
+            <form id="signup-form" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" placeholder="John Doe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" placeholder="john@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" placeholder="Create a strong password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" onclick="showSection('login-section')">Login</a></p>
+                <p style="margin-top: 15px;"><a href="#" onclick="showSection('landing-section')">← Back to Home</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         DASHBOARD SECTION
+         ============================================ -->
+    <section id="dashboard-section" class="hidden">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="user-welcome">
+                    <h1>Welcome back, <span id="user-name-display">User</span>! 👋</h1>
+                    <p>Keep up the great work on your journey!</p>
+                </div>
+                <div class="dashboard-nav">
+                    <button class="btn btn-primary" onclick="showDashboardView('dashboard')">Dashboard</button>
+                    <button class="btn btn-secondary" onclick="showDashboardView('challenges')">Challenges</button>
+                    <button class="btn btn-secondary" onclick="showDashboardView('task')">Daily Task</button>
+                    <button class="btn btn-secondary" onclick="showDashboardView('group')">Group</button>
+                    <button class="btn btn-secondary" onclick="showDashboardView('profile')">Profile</button>
+                    <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Overview -->
+            <div id="dashboard-view">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">💎</div>
+                        <div class="stat-value" id="stat-points">1000</div>
+                        <div class="stat-label">Total Points</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value" id="stat-streak">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="stat-completed">0</div>
+                        <div class="stat-label">Tasks Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="stat-groups">1</div>
+                        <div class="stat-label">Active Groups</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="main-content">
+                        <div class="card">
+                            <h2>Today's Task</h2>
+                            <div id="today-task-preview">
+                                <p style="color: var(--text-secondary); margin: 20px 0;">Complete your daily challenge to maintain your streak!</p>
+                                <button class="btn btn-primary" onclick="showDashboardView('task')">Complete Task →</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2>Progress Overview</h2>
+                            <div class="progress-section">
+                                <h4>Monthly Completion Rate</h4>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="monthly-progress" style="width: 0%">0%</div>
+                                </div>
+                                <p style="color: var(--text-secondary); margin-top: 10px;">Keep going! You're building great habits.</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2>Recent Activity</h2>
+                            <div id="recent-activity-list">
+                                <p style="color: var(--text-secondary);">Your recent activities will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-content">
+                        <div class="card">
+                            <h3>Quick Stats</h3>
+                            <div style="margin-top: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                    <span>Success Rate</span>
+                                    <strong id="success-rate">100%</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                    <span>Best Streak</span>
+                                    <strong id="best-streak">0 days</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Rank</span>
+                                    <strong>🌟 Beginner</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Leaderboard</h3>
+                            <div id="leaderboard-list" style="margin-top: 20px;">
+                                <!-- Leaderboard items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Challenges View -->
+            <div id="challenges-view" class="hidden">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Available Challenges</h2>
+                        <button class="btn btn-primary" onclick="showModal('create-challenge-modal')">+ Create Challenge</button>
+                    </div>
+                    
+                    <div class="challenges-grid" id="challenges-grid">
+                        <!-- Challenges will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Task View -->
+            <div id="task-view" class="hidden">
+                <div class="card">
+                    <div class="task-header">
+                        <div>
+                            <h2>Today's Task</h2>
+                            <p style="color: var(--text-secondary);" id="task-date"></p>
+                        </div>
+                        <div class="task-status pending" id="task-status">Pending</div>
+                    </div>
+
+                    <div id="task-content">
+                        <div class="task-card">
+                            <h3 id="current-task-title">Complete Your Daily Challenge</h3>
+                            <p id="current-task-description" style="color: var(--text-secondary); margin: 10px 0;">Upload proof of completion to earn your points and maintain your streak!</p>
+
+                            <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+                                <div class="upload-icon">📸</div>
+                                <p><strong>Click to upload proof</strong></p>
+                                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 5px;">Upload a photo or screenshot as proof</p>
+                            </div>
+                            <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">
+
+                            <div id="image-preview" class="image-preview hidden">
+                                <img id="preview-img" src="" alt="Preview">
+                                <p style="margin-top: 10px; color: var(--text-secondary);" id="upload-timestamp"></p>
+                                <button class="btn btn-success" onclick="submitTask()" style="margin-top: 15px;">✓ Submit Task</button>
+                                <button class="btn btn-secondary" onclick="cancelUpload()" style="margin-top: 15px;">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Group View -->
+            <div id="group-view" class="hidden">
+                <div class="card">
+                    <h2>Your Group</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Stay connected and keep each other accountable</p>
+                    
+                    <div class="group-members" id="group-members">
+                        <!-- Group members will be populated here -->
+                    </div>
+                </div>
+
+                <div class="pending-approvals" id="pending-approvals-section">
+                    <div class="card">
+                        <h2>Pending Approvals</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 20px;">Review and approve group members' task submissions</p>
+                        
+                        <div id="pending-approvals-list">
+                            <p style="color: var(--text-secondary);">No pending approvals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile View -->
+            <div id="profile-view" class="hidden">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-avatar">👤</div>
+                    <h2 id="profile-name">User Name</h2>
+                    <p id="profile-email">user@example.com</p>
+                    <div style="margin-top: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        <div>
+                            <div style="font-size: 2rem; font-weight: bold;" id="profile-points">1000</div>
+                            <div>Points</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; font-weight: bold;" id="profile-streak">0</div>
+                            <div>Day Streak</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; font-weight: bold;" id="profile-tasks">0</div>
+                            <div>Tasks Done</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Achievements</h2>
+                    <div class="achievement-grid" id="achievements-grid">
+                        <!-- Achievements will be populated here -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Statistics</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div style="text-align: center; padding: 20px; background: var(--light-bg); border-radius: 8px;">
+                            <div style="font-size: 2rem; color: var(--primary-color); font-weight: bold;" id="total-challenges">1</div>
+                            <div style="color: var(--text-secondary);">Total Challenges</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px; background: var(--light-bg); border-radius: 8px;">
+                            <div style="font-size: 2rem; color: var(--success-color); font-weight: bold;" id="success-rate-profile">100%</div>
+                            <div style="color: var(--text-secondary);">Success Rate</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px; background: var(--light-bg); border-radius: 8px;">
+                            <div style="font-size: 2rem; color: var(--secondary-color); font-weight: bold;" id="points-earned">0</div>
+                            <div style="color: var(--text-secondary);">Points Earned</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         CREATE CHALLENGE MODAL
+         ============================================ -->
+    <div class="modal" id="create-challenge-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Challenge</h2>
+                <span class="modal-close" onclick="closeModal('create-challenge-modal')">×</span>
+            </div>
+            
+            <form onsubmit="createChallenge(event)">
+                <div class="form-group">
+                    <label>Challenge Name</label>
+                    <input type="text" id="challenge-name" placeholder="e.g., Morning Workout" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="challenge-description" rows="3" placeholder="Describe your challenge..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="challenge-category" required>
+                        <option value="">Select category</option>
+                        <option value="Fitness">🏋️ Fitness</option>
+                        <option value="Learning">📚 Learning</option>
+                        <option value="Health">🥗 Health</option>
+                        <option value="Productivity">⚡ Productivity</option>
+                        <option value="Mindfulness">🧘 Mindfulness</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Duration (days)</label>
+                    <input type="number" id="challenge-duration" min="1" value="30" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Challenge</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // ============================================
+        // GLOBAL STATE MANAGEMENT
+        // ============================================
+        const APP_STATE = {
+            currentUser: null,
+            currentSection: 'landing-section',
+            currentDashboardView: 'dashboard',
+            challenges: [],
+            groupMembers: [],
+            pendingApprovals: [],
+            taskSubmitted: false,
+            lastTaskDate: null
+        };
+
+        // Predefined demo credentials
+        const DEMO_USERS = [
+            {
+                email: 'user@test.com',
+                password: '123456',
+                name: 'John Doe',
+                points: 1000,
+                streak: 0,
+                tasksCompleted: 0,
+                bestStreak: 0,
+                joinDate: new Date().toISOString()
+            }
+        ];
+
+        // Sample group members
+        const SAMPLE_GROUP_MEMBERS = [
+            { name: 'Alice Johnson', points: 1050, avatar: 'AJ', status: 'active' },
+            { name: 'Bob Smith', points: 980, avatar: 'BS', status: 'active' },
+            { name: 'Carol Williams', points: 1100, avatar: 'CW', status: 'active' },
+            { name: 'David Brown', points: 950, avatar: 'DB', status: 'active' }
+        ];
+
+        // Sample challenges
+        const SAMPLE_CHALLENGES = [
+            {
+                id: 1,
+                name: 'Morning Workout',
+                description: 'Complete 30 minutes of exercise every morning',
+                category: 'Fitness',
+                duration: 30,
+                participants: 12,
+                joined: true
+            },
+            {
+                id: 2,
+                name: 'Read Daily',
+                description: 'Read at least 20 pages of a book every day',
+                category: 'Learning',
+                duration: 30,
+                participants: 25,
+                joined: false
+            },
+            {
+                id: 3,
+                name: 'Meditation Practice',
+                description: '10 minutes of meditation each morning',
+                category: 'Mindfulness',
+                duration: 21,
+                participants: 18,
+                joined: false
+            }
+        ];
+
+        // Achievements system
+        const ACHIEVEMENTS = [
+            { id: 1, name: 'First Step', icon: '🎯', description: 'Complete your first task', unlocked: false },
+            { id: 2, name: 'Week Warrior', icon: '🔥', description: '7-day streak', unlocked: false },
+            { id: 3, name: 'Century Club', icon: '💯', description: 'Complete 100 tasks', unlocked: false },
+            { id: 4, name: 'Point Master', icon: '💎', description: 'Reach 2000 points', unlocked: false },
+            { id: 5, name: 'Social Butterfly', icon: '👥', description: 'Join 3 groups', unlocked: false },
+            { id: 6, name: 'Month Champion', icon: '🏆', description: '30-day streak', unlocked: false }
+        ];
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        function init() {
+            loadFromLocalStorage();
+            initializeApp();
+            checkDailyReset();
+            renderChallenges();
+            renderGroupMembers();
+            updateLeaderboard();
+        }
+
+        function initializeApp() {
+            // Set default challenges if none exist
+            if (!APP_STATE.challenges || APP_STATE.challenges.length === 0) {
+                APP_STATE.challenges = [...SAMPLE_CHALLENGES];
+            }
+
+            // Set default group members if none exist
+            if (!APP_STATE.groupMembers || APP_STATE.groupMembers.length === 0) {
+                APP_STATE.groupMembers = [...SAMPLE_GROUP_MEMBERS];
+            }
+
+            // Update task date display
+            updateTaskDate();
+        }
+
+        // ============================================
+        // LOCAL STORAGE MANAGEMENT
+        // ============================================
+        function saveToLocalStorage() {
+            localStorage.setItem('focusflow_state', JSON.stringify(APP_STATE));
+            if (APP_STATE.currentUser) {
+                localStorage.setItem('focusflow_user', JSON.stringify(APP_STATE.currentUser));
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const savedState = localStorage.getItem('focusflow_state');
+            const savedUser = localStorage.getItem('focusflow_user');
+            
+            if (savedState) {
+                const parsed = JSON.parse(savedState);
+                APP_STATE.challenges = parsed.challenges || [...SAMPLE_CHALLENGES];
+                APP_STATE.groupMembers = parsed.groupMembers || [...SAMPLE_GROUP_MEMBERS];
+                APP_STATE.pendingApprovals = parsed.pendingApprovals || [];
+            }
+            
+            if (savedUser) {
+                APP_STATE.currentUser = JSON.parse(savedUser);
+                // Auto-login if user data exists
+                if (APP_STATE.currentUser) {
+                    showSection('dashboard-section');
+                    updateDashboard();
+                }
+            }
+        }
+
+        function clearLocalStorage() {
+            localStorage.removeItem('focusflow_state');
+            localStorage.removeItem('focusflow_user');
+        }
+
+        // ============================================
+        // AUTHENTICATION
+        // ============================================
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Check against demo credentials
+            const user = DEMO_USERS.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                APP_STATE.currentUser = { ...user };
+                saveToLocalStorage();
+                showToast('Login successful! Welcome back!', 'success');
+                showSection('dashboard-section');
+                updateDashboard();
+            } else {
+                showToast('Invalid credentials. Try: user@test.com / 123456', 'error');
+            }
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            // Create new user
+            const newUser = {
+                email: email,
+                password: password,
+                name: name,
+                points: 1000,
+                streak: 0,
+                tasksCompleted: 0,
+                bestStreak: 0,
+                joinDate: new Date().toISOString()
+            };
+            
+            APP_STATE.currentUser = newUser;
+            saveToLocalStorage();
+            
+            showToast('Account created successfully! Welcome to FocusFlow!', 'success');
+            showSection('dashboard-section');
+            updateDashboard();
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                APP_STATE.currentUser = null;
+                clearLocalStorage();
+                showToast('Logged out successfully', 'success');
+                showSection('landing-section');
+            }
+        }
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            // Show requested section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                APP_STATE.currentSection = sectionId;
+            }
+        }
+
+        function showDashboardView(viewName) {
+            // Hide all dashboard views
+            const views = ['dashboard-view', 'challenges-view', 'task-view', 'group-view', 'profile-view'];
+            views.forEach(view => {
+                const element = document.getElementById(view);
+                if (element) element.classList.add('hidden');
+            });
+            
+            // Show requested view
+            const targetView = document.getElementById(viewName + '-view');
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                APP_STATE.currentDashboardView = viewName;
+                
+                // Update nav buttons
+                updateDashboardNavButtons(viewName);
+                
+                // Refresh data for specific views
+                if (viewName === 'profile') {
+                    updateProfileView();
+                } else if (viewName === 'group') {
+                    renderGroupMembers();
+                    renderPendingApprovals();
+                } else if (viewName === 'challenges') {
+                    renderChallenges();
+                } else if (viewName === 'task') {
+                    updateTaskView();
+                }
+            }
+        }
+
+        function updateDashboardNavButtons(activeView) {
+            const buttons = document.querySelectorAll('.dashboard-nav .btn');
+            const viewMap = {
+                'dashboard': 0,
+                'challenges': 1,
+                'task': 2,
+                'group': 3,
+                'profile': 4
+            };
+            
+            buttons.forEach((btn, index) => {
+                if (index === viewMap[activeView]) {
+                    btn.classList.remove('btn-secondary');
+                    btn.classList.add('btn-primary');
+                } else if (index < 5) { // Exclude logout button
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-secondary');
+                }
+            });
+        }
+
+        // ============================================
+        // DASHBOARD UPDATES
+        // ============================================
+        function updateDashboard() {
+            if (!APP_STATE.currentUser) return;
+            
+            const user = APP_STATE.currentUser;
+            
+            // Update user name display
+            document.getElementById('user-name-display').textContent = user.name.split(' ')[0];
+            
+            // Update stats
+            document.getElementById('stat-points').textContent = user.points.toFixed(0);
+            document.getElementById('stat-streak').textContent = user.streak || 0;
+            document.getElementById('stat-completed').textContent = user.tasksCompleted || 0;
+            document.getElementById('stat-groups').textContent = APP_STATE.challenges.filter(c => c.joined).length || 1;
+            
+            // Update success rate
+            const successRate = user.tasksCompleted > 0 ? 
+                ((user.tasksCompleted / (user.tasksCompleted + (user.tasksMissed || 0))) * 100).toFixed(0) : 100;
+            document.getElementById('success-rate').textContent = successRate + '%';
+            document.getElementById('best-streak').textContent = (user.bestStreak || 0) + ' days';
+            
+            // Update monthly progress
+            const today = new Date().getDate();
+            const completionRate = user.tasksCompleted > 0 ? 
+                Math.min((user.tasksCompleted / today) * 100, 100) : 0;
+            document.getElementById('monthly-progress').style.width = completionRate + '%';
+            document.getElementById('monthly-progress').textContent = completionRate.toFixed(0) + '%';
+            
+            // Update recent activity
+            updateRecentActivity();
+            
+            saveToLocalStorage();
+        }
+
+        function updateRecentActivity() {
+            const activityList = document.getElementById('recent-activity-list');
+            const activities = [
+                { icon: '✅', text: 'Task completed', time: 'Today', color: 'var(--success-color)' },
+                { icon: '🎯', text: 'Joined new challenge', time: 'Yesterday', color: 'var(--primary-color)' },
+                { icon: '🔥', text: 'Streak milestone reached', time: '2 days ago', color: 'var(--warning-color)' }
+            ];
+            
+            activityList.innerHTML = activities.map(activity => `
+                <div style="display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border-color);">
+                    <div style="font-size: 2rem;">${activity.icon}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600;">${activity.text}</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            
+            // Combine current user with group members
+            const allMembers = [
+                { name: APP_STATE.currentUser?.name || 'You', points: APP_STATE.currentUser?.points || 1000, isYou: true },
+                ...APP_STATE.groupMembers
+            ].sort((a, b) => b.points - a.points);
+            
+            leaderboardList.innerHTML = allMembers.slice(0, 5).map((member, index) => `
+                <div style="display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                    <div style="font-size: 1.2rem; font-weight: bold; width: 30px;">${index + 1}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600;">${member.name} ${member.isYou ? '(You)' : ''}</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">${member.points} points</div>
+                    </div>
+                    ${index === 0 ? '<div style="font-size: 1.5rem;">🏆</div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        // ============================================
+        // DAILY RESET & TASK MANAGEMENT
+        // ============================================
+        function checkDailyReset() {
+            const today = new Date().toDateString();
+            const lastDate = APP_STATE.lastTaskDate;
+            
+            if (lastDate && lastDate !== today) {
+                // Check if task was completed yesterday
+                if (!APP_STATE.taskSubmitted) {
+                    // Deduct 5% points
+                    deductPoints();
+                }
+                
+                // Reset for new day
+                APP_STATE.taskSubmitted = false;
+                APP_STATE.lastTaskDate = today;
+                saveToLocalStorage();
+            } else if (!lastDate) {
+                APP_STATE.lastTaskDate = today;
+                saveToLocalStorage();
+            }
+        }
+
+        function deductPoints() {
+            if (!APP_STATE.currentUser) return;
+            
+            const deduction = APP_STATE.currentUser.points * 0.05;
+            APP_STATE.currentUser.points -= deduction;
+            
+            // Reset streak
+            APP_STATE.currentUser.streak = 0;
+            
+            // Distribute points to group members (simulation)
+            const perMember = deduction / APP_STATE.groupMembers.length;
+            APP_STATE.groupMembers.forEach(member => {
+                member.points += perMember;
+            });
+            
+            showToast(`⚠️ Missed task! -${deduction.toFixed(0)} points deducted`, 'warning');
+            
+            saveToLocalStorage();
+            updateDashboard();
+        }
+
+        function updateTaskDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('en-US', options);
+            const taskDateElement = document.getElementById('task-date');
+            if (taskDateElement) {
+                taskDateElement.textContent = today;
+            }
+        }
+
+        function updateTaskView() {
+            const taskStatus = document.getElementById('task-status');
+            const uploadArea = document.getElementById('upload-area');
+            const imagePreview = document.getElementById('image-preview');
+            
+            if (APP_STATE.taskSubmitted) {
+                taskStatus.textContent = 'Completed';
+                taskStatus.classList.remove('pending');
+                taskStatus.classList.add('completed');
+                uploadArea.style.display = 'none';
+                imagePreview.classList.remove('hidden');
+            } else {
+                taskStatus.textContent = 'Pending';
+                taskStatus.classList.remove('completed');
+                taskStatus.classList.add('pending');
+                uploadArea.style.display = 'block';
+                imagePreview.classList.add('hidden');
+            }
+        }
+
+        // ============================================
+        // FILE UPLOAD & TASK SUBMISSION
+        // ============================================
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showToast('Please upload an image file', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview-img');
+                preview.src = e.target.result;
+                
+                // Show preview
+                document.getElementById('upload-area').style.display = 'none';
+                document.getElementById('image-preview').classList.remove('hidden');
+                
+                // Add timestamp
+                const timestamp = new Date().toLocaleString();
+                document.getElementById('upload-timestamp').textContent = `Uploaded: ${timestamp}`;
+                
+                showToast('Image uploaded! Click Submit to complete task', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function cancelUpload() {
+            document.getElementById('file-input').value = '';
+            document.getElementById('upload-area').style.display = 'block';
+            document.getElementById('image-preview').classList.add('hidden');
+        }
+
+        function submitTask() {
+            if (!APP_STATE.currentUser) return;
+            
+            // Mark task as completed
+            APP_STATE.taskSubmitted = true;
+            APP_STATE.currentUser.tasksCompleted++;
+            APP_STATE.currentUser.streak++;
+            
+            // Update best streak
+            if (APP_STATE.currentUser.streak > (APP_STATE.currentUser.bestStreak || 0)) {
+                APP_STATE.currentUser.bestStreak = APP_STATE.currentUser.streak;
+            }
+            
+            // Check achievements
+            checkAchievements();
+            
+            // Add to pending approvals for group
+            const approval = {
+                id: Date.now(),
+                userName: APP_STATE.currentUser.name,
+                taskName: 'Daily Challenge',
+                timestamp: new Date().toLocaleString(),
+                imageUrl: document.getElementById('preview-img').src,
+                approved: false
+            };
+            APP_STATE.pendingApprovals.push(approval);
+            
+            showToast('🎉 Task submitted successfully! Keep up the streak!', 'success');
+            
+            saveToLocalStorage();
+            updateDashboard();
+            updateTaskView();
+        }
+
+        // ============================================
+        // CHALLENGES MANAGEMENT
+        // ============================================
+        function renderChallenges() {
+            const challengesGrid = document.getElementById('challenges-grid');
+            if (!challengesGrid) return;
+            
+            challengesGrid.innerHTML = APP_STATE.challenges.map(challenge => `
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div>
+                            <h3>${challenge.name}</h3>
+                            <p style="color: var(--text-secondary); font-size: 14px; margin-top: 5px;">${challenge.description}</p>
+                        </div>
+                        <div class="challenge-badge">${challenge.category}</div>
+                    </div>
+                    
+                    <div class="challenge-details">
+                        <div class="challenge-detail">
+                            <span>⏱️</span>
+                            <span>${challenge.duration} days</span>
+                        </div>
+                        <div class="challenge-detail">
+                            <span>👥</span>
+                            <span>${challenge.participants} participants</span>
+                        </div>
+                    </div>
+                    
+                    ${challenge.joined ? 
+                        `<button class="btn btn-success" style="width: 100%;" disabled>✓ Joined</button>` :
+                        `<button class="btn btn-primary" style="width: 100%;" onclick="joinChallenge(${challenge.id})">Join Challenge</button>`
+                    }
+                </div>
+            `).join('');
+        }
+
+        function joinChallenge(challengeId) {
+            const challenge = APP_STATE.challenges.find(c => c.id === challengeId);
+            if (challenge) {
+                challenge.joined = true;
+                challenge.participants++;
+                showToast(`Successfully joined "${challenge.name}"!`, 'success');
+                renderChallenges();
+                saveToLocalStorage();
+                updateDashboard();
+            }
+        }
+
+        function createChallenge(event) {
+            event.preventDefault();
+            
+            const newChallenge = {
+                id: Date.now(),
+                name: document.getElementById('challenge-name').value,
+                description: document.getElementById('challenge-description').value,
+                category: document.getElementById('challenge-category').value,
+                duration: parseInt(document.getElementById('challenge-duration').value),
+                participants: 1,
+                joined: true
+            };
+            
+            APP_STATE.challenges.unshift(newChallenge);
+            
+            showToast('Challenge created successfully!', 'success');
+            closeModal('create-challenge-modal');
+            renderChallenges();
+            saveToLocalStorage();
+            
+            // Reset form
+            event.target.reset();
+        }
+
+        // ============================================
+        // GROUP MANAGEMENT
+        // ============================================
+        function renderGroupMembers() {
+            const groupMembersContainer = document.getElementById('group-members');
+            if (!groupMembersContainer) return;
+            
+            // Add current user to the list
+            const allMembers = [
+                {
+                    name: APP_STATE.currentUser?.name || 'You',
+                    points: APP_STATE.currentUser?.points || 1000,
+                    avatar: APP_STATE.currentUser?.name?.split(' ').map(n => n[0]).join('') || 'U',
+                    isYou: true
+                },
+                ...APP_STATE.groupMembers
+            ];
+            
+            groupMembersContainer.innerHTML = allMembers.map(member => `
+                <div class="member-card">
+                    <div class="member-avatar">${member.avatar}</div>
+                    <div class="member-info">
+                        <div class="member-name">${member.name} ${member.isYou ? '(You)' : ''}</div>
+                        <div class="member-points">💎 ${member.points.toFixed(0)} points</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPendingApprovals() {
+            const approvalsList = document.getElementById('pending-approvals-list');
+            if (!approvalsList) return;
+            
+            const pending = APP_STATE.pendingApprovals.filter(a => !a.approved);
+            
+            if (pending.length === 0) {
+                approvalsList.innerHTML = '<p style="color: var(--text-secondary);">No pending approvals</p>';
+                return;
+            }
+            
+            approvalsList.innerHTML = pending.map(approval => `
+                <div class="approval-card">
+                    <div class="approval-header">
+                        <div>
+                            <h4>${approval.userName}</h4>
+                            <p style="color: var(--text-secondary); font-size: 14px;">${approval.taskName}</p>
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 14px;">${approval.timestamp}</span>
+                    </div>
+                    
+                    <div style="margin: 15px 0;">
+                        <img src="${approval.imageUrl}" alt="Task proof" style="max-width: 100%; border-radius: 8px;">
+                    </div>
+                    
+                    <div class="approval-actions">
+                        <button class="btn btn-success" onclick="approveTask(${approval.id})">✓ Approve</button>
+                        <button class="btn btn-danger" onclick="rejectTask(${approval.id})">✗ Reject</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveTask(approvalId) {
+            const approval = APP_STATE.pendingApprovals.find(a => a.id === approvalId);
+            if (approval) {
+                approval.approved = true;
+                showToast('Task approved!', 'success');
+                renderPendingApprovals();
+                saveToLocalStorage();
+            }
+        }
+
+        function rejectTask(approvalId) {
+            APP_STATE.pendingApprovals = APP_STATE.pendingApprovals.filter(a => a.id !== approvalId);
+            showToast('Task rejected', 'warning');
+            renderPendingApprovals();
+            saveToLocalStorage();
+        }
+
+        // ============================================
+        // PROFILE VIEW
+        // ============================================
+        function updateProfileView() {
+            if (!APP_STATE.currentUser) return;
+            
+            const user = APP_STATE.currentUser;
+            
+            // Update profile header
+            const initials = user.name.split(' ').map(n => n[0]).join('');
+            document.getElementById('profile-avatar').textContent = initials;
+            document.getElementById('profile-name').textContent = user.name;
+            document.getElementById('profile-email').textContent = user.email;
+            document.getElementById('profile-points').textContent = user.points.toFixed(0);
+            document.getElementById('profile-streak').textContent = user.streak || 0;
+            document.getElementById('profile-tasks').textContent = user.tasksCompleted || 0;
+            
+            // Update statistics
+            document.getElementById('total-challenges').textContent = APP_STATE.challenges.filter(c => c.joined).length;
+            const successRate = user.tasksCompleted > 0 ? 
+                ((user.tasksCompleted / (user.tasksCompleted + (user.tasksMissed || 0))) * 100).toFixed(0) : 100;
+            document.getElementById('success-rate-profile').textContent = successRate + '%';
+            document.getElementById('points-earned').textContent = Math.max(0, user.points - 1000).toFixed(0);
+            
+            // Render achievements
+            renderAchievements();
+        }
+
+        function renderAchievements() {
+            const achievementsGrid = document.getElementById('achievements-grid');
+            if (!achievementsGrid) return;
+            
+            achievementsGrid.innerHTML = ACHIEVEMENTS.map(achievement => `
+                <div class="achievement-badge ${achievement.unlocked ? '' : 'locked'}">
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div style="font-weight: 600; font-size: 14px; margin-bottom: 5px;">${achievement.name}</div>
+                    <div style="font-size: 12px; color: var(--text-secondary);">${achievement.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function checkAchievements() {
+            if (!APP_STATE.currentUser) return;
+            
+            const user = APP_STATE.currentUser;
+            
+            // Check each achievement
+            if (user.tasksCompleted >= 1 && !ACHIEVEMENTS[0].unlocked) {
+                ACHIEVEMENTS[0].unlocked = true;
+                showToast('🎯 Achievement Unlocked: First Step!', 'success');
+            }
+            
+            if (user.streak >= 7 && !ACHIEVEMENTS[1].unlocked) {
+                ACHIEVEMENTS[1].unlocked = true;
+                showToast('🔥 Achievement Unlocked: Week Warrior!', 'success');
+            }
+            
+            if (user.tasksCompleted >= 100 && !ACHIEVEMENTS[2].unlocked) {
+                ACHIEVEMENTS[2].unlocked = true;
+                showToast('💯 Achievement Unlocked: Century Club!', 'success');
+            }
+            
+            if (user.points >= 2000 && !ACHIEVEMENTS[3].unlocked) {
+                ACHIEVEMENTS[3].unlocked = true;
+                showToast('💎 Achievement Unlocked: Point Master!', 'success');
+            }
+            
+            if (user.streak >= 30 && !ACHIEVEMENTS[5].unlocked) {
+                ACHIEVEMENTS[5].unlocked = true;
+                showToast('🏆 Achievement Unlocked: Month Champion!', 'success');
+            }
+        }
+
+        // ============================================
+        // MODAL MANAGEMENT
+        // ============================================
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
+            }
+        };
+
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '⚠';
+            
+            toast.innerHTML = `
+                <div style="font-size: 1.5rem;">${icon}</div>
+                <div>${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    container.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // ============================================
+        // EVENT LISTENERS & INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            
+            // Check for daily reset every minute
+            setInterval(checkDailyReset, 60000);
+        });
+
+        // Prevent form submission from refreshing page
+        document.addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
